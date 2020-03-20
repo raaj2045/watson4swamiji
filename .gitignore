@@ -62,7 +62,6 @@ typings/
 .next
 
 .DS_Store
-dist/
 .yalc/
 yalc.lock
 package-lock.json
