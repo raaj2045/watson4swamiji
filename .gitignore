@@ -63,6 +63,7 @@ typings/
 
 .DS_Store
 .yalc/
+dist/
 yalc.lock
 package-lock.json
 services.json

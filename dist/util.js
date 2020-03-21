@@ -42,8 +42,7 @@ var path = require("path");
 var SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 function getCfenv() {
     var cfenvOpt = {};
-    var serviceName = process.env.STT_SERVICE_NAME ||
-        'code-pattern-custom-language-model';
+    var serviceName = process.env.STT_SERVICE_NAME || 'code-pattern-custom-language-model';
     var service = cfenv.getAppEnv(cfenvOpt).getService(serviceName);
     var servicesFile = path.join(__dirname, '..', 'services.json');
     if (!service && fs.existsSync(servicesFile)) {
@@ -187,11 +186,13 @@ var WatsonSTT = (function () {
                 addQueue(tf);
                 sstream = this.speech.recognizeUsingWebSocket(recognizeParams);
                 sstream.on('data', function (event) {
-                    if (event.results[0] && tf.ws &&
+                    if (event.results[0] &&
+                        tf.ws &&
                         event.results[0].final === true) {
                         var result = event.results[0].alternatives[0];
                         var timestamps = result.timestamps;
-                        tf.ws.send(JSON.stringify({ transcript: result.transcript.trim(),
+                        tf.ws.send(JSON.stringify({
+                            transcript: result.transcript.trim(),
                             start: timestamps[0][1],
                             stop: timestamps[timestamps.length - 1][2]
                         }));
@@ -278,7 +279,7 @@ var WatsonSTT = (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 getCorporaParams = {
-                    customization_id: this.langModelId,
+                    customization_id: this.langModelId
                 };
                 return [2, new Promise(function (resolve, reject) {
                         _this.speech.listCorpora(getCorporaParams, function (error, corpora) {
@@ -371,7 +372,7 @@ var WatsonSTT = (function () {
         if (this.speechModels.models.find(function (element) {
             return element.name === model;
         })) {
-            return found = true;
+            return (found = true);
         }
         return found;
     };
@@ -437,7 +438,7 @@ var WatsonSTT = (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 listAudioParams = {
-                    customization_id: this.acousticModelId,
+                    customization_id: this.acousticModelId
                 };
                 return [2, new Promise(function (resolve, reject) {
                         _this.speech.listAudio(listAudioParams, function (error, audioResources) {
@@ -491,7 +492,10 @@ function getCustomLangModelId(speech, user) {
     var modelName = user.langModel;
     for (var index = 0, len = models.length; index < len; index++) {
         if (models[index].name === modelName) {
-            return Promise.resolve([undefined, models[index].id]);
+            return Promise.resolve([
+                undefined,
+                models[index].id
+            ]);
         }
     }
     return new Promise(function (resolve) {
@@ -516,13 +520,16 @@ function getCustomLangModelId(speech, user) {
             speech.createLanguageModel({
                 name: modelName,
                 base_model_name: user.baseModel,
-                description: "Custom model for " + user.username,
+                description: "Custom model for " + user.username
             }, function (error, languageModel) {
                 if (error) {
                     return resolve([error]);
                 }
                 else {
-                    models.push({ name: modelName, id: languageModel.customization_id });
+                    models.push({
+                        name: modelName,
+                        id: languageModel.customization_id
+                    });
                     return resolve([undefined, languageModel.customization_id]);
                 }
             });
@@ -545,7 +552,10 @@ function getCustomAcousticModelId(speech, user) {
     var modelName = user.acousticModel;
     for (var index = 0, len = acoustics.length; index < len; index++) {
         if (acoustics[index].name === modelName) {
-            return Promise.resolve([undefined, acoustics[index].id]);
+            return Promise.resolve([
+                undefined,
+                acoustics[index].id
+            ]);
         }
     }
     return new Promise(function (resolve) {
@@ -570,7 +580,7 @@ function getCustomAcousticModelId(speech, user) {
             speech.createAcousticModel({
                 name: modelName,
                 base_model_name: user.baseModel,
-                description: "Custom acoustic model for " + user.username,
+                description: "Custom acoustic model for " + user.username
             }, function (error, acousticModel) {
                 if (error) {
                     return resolve([error]);
@@ -596,7 +606,7 @@ var delQueue = function (tf) {
 };
 exports.wsHandler = function (socket) {
     socket.on('message', function (message) {
-        if (typeof (message) === 'string') {
+        if (typeof message === 'string') {
             var json = JSON.parse(message);
             var tf_1 = queue[json.tid];
             if (tf_1) {
