@@ -13,7 +13,8 @@
 		"server": "node dist/server.js",
 		"dev": "npm run build && concurrently --kill-others-on-fail \"npm run start\" \"npm run client\"",
 		"lint": "tslint --project tsconfig.json -c tslint.json 'server/**/*.ts' && npm run lint-client",
-		"lint-client": "cd client && npm run lint"
+		"lint-client": "cd client && npm run lint",
+		"heroku-postbuild": "cd client && npm run build"
 	},
 	"repository": {
 		"type": "git",
