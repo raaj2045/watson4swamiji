@@ -7,7 +7,7 @@
 		"start": "npm run serve",
 		"build": "npm run build-client && tsc",
 		"build-client": "cd client && npm install",
-		"serve": "node dist/server.js | bunyan",
+		"serve": "node dist/server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"client": "cd client && npm run start",
 		"server": "node dist/server.js",
