@@ -6,15 +6,14 @@
 	"scripts": {
 		"start": "npm run serve",
 		"build": "npm run build-client && tsc",
-		"build-client": "cd client && npm install",
+		"build-client": "cd client && npm install && npm run build",
 		"serve": "node dist/server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"client": "cd client && npm run start",
 		"server": "node dist/server.js",
 		"dev": "npm run build && concurrently --kill-others-on-fail \"npm run start\" \"npm run client\"",
 		"lint": "tslint --project tsconfig.json -c tslint.json 'server/**/*.ts' && npm run lint-client",
-		"lint-client": "cd client && npm run lint",
-		"heroku-postbuild": "cd client && npm run build"
+		"lint-client": "cd client && npm run lint"
 	},
 	"repository": {
 		"type": "git",
