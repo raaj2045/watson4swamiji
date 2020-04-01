@@ -27,11 +27,16 @@ var App = (function () {
         initPassport();
         this.express.set('port', process.env.PORT || 5000);
         this.express.set('stt_service', util_1.getCfenv());
-        this.express.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+        this.express.use(cors({ origin: 'http://c6767859.ngrok.io', credentials: true }));
         this.express.use(bunyanFactory({
-            excludes: ['req', 'res',
-                'req-headers', 'res-headers',
-                'response-hrtime', 'user-agent'],
+            excludes: [
+                'req',
+                'res',
+                'req-headers',
+                'res-headers',
+                'response-hrtime',
+                'user-agent'
+            ],
             obfuscate: ['body.password']
         }));
         this.express.use(compression());
@@ -39,7 +44,7 @@ var App = (function () {
         this.express.use(session({
             resave: true,
             saveUninitialized: true,
-            secret: crypto.randomBytes(64).toString('hex'),
+            secret: crypto.randomBytes(64).toString('hex')
         }));
         this.express.use(bodyParser.json({ limit: '2mb' }));
         this.express.use(bodyParser.urlencoded({ extended: true }));
@@ -60,9 +65,10 @@ var App = (function () {
         var wss = new ws_1.Server({ server: server });
         server.on('request', this.express);
         wss.on('connection', util_1.wsHandler);
-        server.listen(this.express.get('port'), function () {
-            console.log(('  App is running at http://localhost:%d \
-      in %s mode'), _this.express.get('port'), _this.express.get('env'));
+        server
+            .listen(this.express.get('port'), function () {
+            console.log('  App is running at http://localhost:%d \
+      in %s mode', _this.express.get('port'), _this.express.get('env'));
             console.log('  Press CTRL-C to stop');
         })
             .setTimeout(600000);
@@ -82,21 +88,26 @@ function initPassport() {
             if (users[username].password === password) {
                 return done(undefined, Object.assign({ username: username }, users[username]));
             }
-            return done(undefined, false, { message: 'Invalid username or password.' });
+            return done(undefined, false, {
+                message: 'Invalid username or password.'
+            });
         }
         else {
-            return done(undefined, false, { message: "user: " + username + " doesn't exist" });
+            return done(undefined, false, {
+                message: "user: " + username + " doesn't exist"
+            });
         }
     }));
 }
 function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated() || req.path === '/api/login' ||
-        !(req.path.includes('api'))) {
+    if (req.isAuthenticated() ||
+        req.path === '/api/login' ||
+        !req.path.includes('api')) {
         return next();
     }
     return res.status(401).json({
         error: 'Not authorized to view this resource.'
     });
 }
-exports.server = (new App()).express;
+exports.server = new App().express;
 //# sourceMappingURL=server.js.map
